@@ -1,36 +1,136 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CodeLens AI
+
+> AI-powered code review assistant for detecting bugs, security issues, performance problems, and code-quality improvements.
+
+![CodeLens AI](https://img.shields.io/badge/CodeLens-AI-violet?style=for-the-badge)
+![Next.js](https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-38B2AC?style=for-the-badge&logo=tailwind-css)
+
+## Features
+
+- 🔍 **AI-Powered Analysis** — Uses Google Gemini to provide deep, contextual code review
+- 🛡️ **Security Audit** — Detects SQL injection, XSS, hardcoded secrets, OWASP Top 10
+- 🐛 **Bug Detection** — Finds logic errors, null pointers, off-by-one bugs, type mismatches
+- ⚡ **Performance Analysis** — Identifies bottlenecks, memory leaks, N+1 queries
+- 💡 **Code Quality** — Suggests best practices, readability improvements, dead code removal
+- 📊 **Quality Score** — 0–100 score based on detected issues
+- 🔧 **Monaco Editor** — VS Code-level editor with syntax highlighting and dark theme
+- 📋 **Copy Fixes** — One-click copy for every suggested code fix
+- 📁 **Review History** — localStorage-persisted history with full review details
+- 🎯 **Demo Mode** — Works without an API key using pattern-based analysis
+
+## Supported Languages
+
+C · C++ · Java · Python · JavaScript · TypeScript · SQL · HTML · CSS
+
+## Tech Stack
+
+- **Framework**: Next.js 16 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS v4
+- **Editor**: Monaco Editor (`@monaco-editor/react`)
+- **AI**: Google Gemini (`gemini-1.5-flash`)
+- **Icons**: Lucide React
 
 ## Getting Started
 
-First, run the development server:
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/Amit0730/codelens-ai.git
+cd codelens-ai
+```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Configure environment variables
+
+```bash
+cp .env.local.example .env.local
+```
+
+Edit `.env.local` and add your Gemini API key:
+
+```
+GEMINI_API_KEY=your_gemini_api_key_here
+```
+
+Get a free API key at [Google AI Studio](https://aistudio.google.com/app/apikey).
+
+> **Note**: The app works in demo mode without an API key, using pattern-based analysis.
+
+### 4. Run the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Deployment on Vercel
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Option 1: Vercel Dashboard (Recommended)
 
-## Learn More
+1. Go to [vercel.com](https://vercel.com) → **New Project**
+2. Import from GitHub: `Amit0730/codelens-ai`
+3. Add environment variable: `GEMINI_API_KEY = your_key`
+4. Click **Deploy**
 
-To learn more about Next.js, take a look at the following resources:
+### Option 2: Vercel CLI
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm i -g vercel
+vercel login
+vercel --prod
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Add the environment variable:
+```bash
+vercel env add GEMINI_API_KEY
+```
 
-## Deploy on Vercel
+## Architecture
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+codelens-ai/
+├── app/
+│   ├── page.tsx              # Home — code editor + review panel
+│   ├── history/page.tsx      # Review history
+│   ├── about/page.tsx        # About & limitations
+│   ├── layout.tsx            # Root layout
+│   └── api/review/route.ts   # Server-side AI review endpoint
+├── components/
+│   ├── CodeEditor.tsx        # Monaco Editor wrapper
+│   ├── ReviewPanel.tsx       # Results dashboard with tabs
+│   ├── IssueCard.tsx         # Per-issue display with copy-fix
+│   ├── ScoreRing.tsx         # Quality score SVG donut chart
+│   └── Navbar.tsx            # Navigation
+└── lib/
+    ├── types.ts              # Shared TypeScript types
+    ├── ai.ts                 # Gemini API client (server-side only)
+    ├── demo-analyzer.ts      # Local pattern-based analyzer
+    ├── storage.ts            # localStorage history helpers
+    ├── examples.ts           # Example code for all languages
+    └── utils.ts              # Score calculation & formatting
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Security
+
+- ✅ API keys are **never** exposed in client code
+- ✅ Submitted code is **never executed** on the server
+- ✅ Input is validated and length-limited (50,000 chars max)
+- ✅ Security headers (X-Content-Type-Options, X-Frame-Options, XSS protection)
+- ✅ Review history stored only in browser localStorage
+
+## Disclaimer
+
+AI analysis does not guarantee that code is bug-free or secure. Always have experienced developers review critical code. See the [About](https://codelens-ai.vercel.app/about) page for full limitations.
+
+## License
+
+MIT
